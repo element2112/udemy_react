@@ -1,23 +1,14 @@
-import React, { Fragment, Component } from 'react';
+import React, { Component } from 'react';
+import Navbar from './components/layout/Navbar'
 import './App.css';
 
 class App extends Component {
 
-  foos = () => 'Bars';
-
-  render(){
-    const name = 'John Doe';
-
-    const foo = () => 'Bar';
-
+  render() {
     return (
-      <Fragment>
-        <h1>Hello {name.toUpperCase()}</h1>
-        <h1>Goodbye</h1>
-        <h1>{foo()}</h1>
-        <h1>Hello {foo()}</h1>
-        <h1>Hello {this.foos()}</h1>
-      </Fragment>
+      <div className='App'>
+        <Navbar title="Github Finder" />
+      </div>
     );
   }
 
