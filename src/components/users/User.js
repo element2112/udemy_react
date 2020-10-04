@@ -1,39 +1,32 @@
-import React, { Fragment, Component } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import Spinner from '../layout/Spinner';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import Repos from '../repos/Repos'
 
-export class User extends Component {
+const User = ({ user, loading, getUser, getUserRepos, repos, match }) => {
 
-  componentDidMount()
-  {
-    this.props.getUser(this.props.match.params.login) // route/:login
-  }
+  useEffect(() => {
+    getUser(match.params.login);
+    getUserRepos(match.params.login)
+    // the comment below gets rid of the react warning wanting us to add the functions as dependencies in []
+    // eslint-disable-next-line 
+  }, []) // ex: [repos] would mean that useEffect would only run when the repos state changes. An empty array means we only want it to run once
 
-  static propTypes = {
-    loading: PropTypes.bool,
-    user: PropTypes.object.isRequired,
-    getUser: PropTypes.func.isRequired
-  }
-
-  render() {
-
-    const { name, 
-            avatar_url, 
-            location, 
-            bio, 
-            blog, 
-            login,
-            html_url, 
-            followers, 
-            following, 
-            public_repos, 
-            public_gists, 
-            company,
-            hireable 
-          } = this.props.user;
-
-    const { loading } = this.props;
+  const { name, 
+          avatar_url, 
+          location, 
+          bio, 
+          blog, 
+          login,
+          html_url, 
+          followers, 
+          following, 
+          public_repos, 
+          public_gists, 
+          company,
+          hireable, 
+        } = user;
 
     if (loading)
       return <Spinner />
@@ -48,8 +41,8 @@ export class User extends Component {
           (<i className="fas fa-times-circle text-danger" />)
         }
 
-        <div class="card grid-2">
-          <div class="all-center">
+        <div className="card grid-2">
+          <div className="all-center">
             <img src={avatar_url} className="round-mg" style={{ width: "150px" }} alt="" />
             <h1>{name}</h1>
             <p>Location: {location}</p>
@@ -71,15 +64,23 @@ export class User extends Component {
           </div>
         </div>
 
-        <div class="card text-center">
-          <div class="badge badge-primary">Followers: {followers}</div>
-          <div class="badge badge-success">Follwing: {following}</div>
-          <div class="badge badge-light">Public Repos: {public_repos}</div>
-          <div class="badge badge-dark">Public: {public_gists}</div>
-        </div>        
+        <div className="card text-center">
+          <div className="badge badge-primary">Followers: {followers}</div>
+          <div className="badge badge-success">Follwing: {following}</div>
+          <div className="badge badge-light">Public Repos: {public_repos}</div>
+          <div className="badge badge-dark">Public: {public_gists}</div>
+        </div>
+        <Repos repos={repos} />       
       </Fragment>
     )
-  }
+}
+
+User.propTypes = {
+  loading: PropTypes.bool,
+  user: PropTypes.object.isRequired,
+  getUser: PropTypes.func.isRequired,
+  repos: PropTypes.array.isRequired,
+  getUserRepos: PropTypes.func.isRequired
 }
 
 export default User
